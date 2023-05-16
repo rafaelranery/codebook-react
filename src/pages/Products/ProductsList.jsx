@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+
+import { usePageTitle } from '../../hooks/usePageTitle'
+
 import { ProductCard } from '../../components'
 import { FilterBar } from './components/FilterBar'
-import { useLocation } from 'react-router-dom'
+
 
 
 export const ProductsList = () => {
@@ -11,6 +15,8 @@ export const ProductsList = () => {
     const search = useLocation().search
     /* getting the searchTerm through class URLSearchParams */
     const searchTerm = new URLSearchParams(search).get('q')
+    usePageTitle('Products')
+
 
     useEffect(() => {
         async function fetchProducts() {
