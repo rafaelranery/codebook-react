@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { usePageTitle } from '../../hooks/usePageTitle'
+import { useFilter } from '../../context'
 
 import { ProductCard } from '../../components'
 import { FilterBar } from './components/FilterBar'
@@ -10,20 +11,21 @@ import { FilterBar } from './components/FilterBar'
 
 export const ProductsList = () => {
     const [filterOpen, setFilterOpen] = useState(false)
-    const [products, setProducts] = useState([])
+
+    const { productList: products, initialProductList } = useFilter()
+
     /* getting the search params through the returned useLocation object */
     const search = useLocation().search
     /* getting the searchTerm through class URLSearchParams */
     const searchTerm = new URLSearchParams(search).get('q')
     usePageTitle('Products')
 
-
     useEffect(() => {
         async function fetchProducts() {
             /* precisamos fazer um ternário, e não simplesmente passar o valor do search term porque se não houver ELE NÃO RETORNA UMA STRING VAZIA, mas um NULL!!!! */
             const res = await fetch(`http://localhost:3000/products?name_like=${searchTerm ? searchTerm : ''}`)
             const data = await res.json()
-            setProducts(data)
+            initialProductList(data)
         }
         fetchProducts()
     }, [])
